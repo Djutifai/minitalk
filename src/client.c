@@ -16,7 +16,7 @@ void	ft_send_char(pid_t server_pid, char c)
 			kill(server_pid, SIGUSR2);
 		}
 		counter >>= 1;
-		usleep(500);
+		usleep(50);
 	}
 }
 
@@ -26,7 +26,11 @@ int	main(int argc, char **argv)
 	size_t	i;
 
 	i = 0;
-	(void) argc;
+	if (argc != 3)
+	{
+		write(1, "Check arguments!\nRight usage ./client pid message\n", 50);
+		return 0;
+	}
 	server_pid = (pid_t)ft_atoi(argv[1]);
 	while (argv[2][i])
 	{
