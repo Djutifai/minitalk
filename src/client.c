@@ -1,18 +1,5 @@
 #include "../includes/minitalk.h"
 
-static void ft_exit(pid_t server_pid)
-{
-	size_t i;
-
-	i = 7;
-	while (i)
-	{
-		kill(server_pid, SIGUSR2);
-		i--;
-	}
-	exit(0);
-}
-
 static void	ft_send_char(pid_t server_pid, char *str)
 {
 	static int		counter;
@@ -20,31 +7,42 @@ static void	ft_send_char(pid_t server_pid, char *str)
 	static char		*mystr;
 	static pid_t	pid;
 
-	if (!pid)
-	{
-		mystr = str;
-		pid = server_pid;
-	}
 	if (!counter)
 	{
-		counter = 64;
+		counter = 1 << 6;
 		if (!i)
 			i = 0;
 		else
+		{
+			write(1, " ", 1);
+			write(1, &mystr[i], 1);
+			write(1, "\n", 1);
 			i++;
+		}
+		if (!mystr)
+		{
+			mystr = str;
+			pid = server_pid;
+		}
 		if (!mystr[i])
-			ft_exit(pid);
+			exit(1);
 	}
 	if (mystr[i] & counter)
+	{
+		write(1, "1", 1);
 		kill(pid, SIGUSR1);
+	}
 	else
+	{
+		write(1, "0", 1);
 		kill(pid, SIGUSR2);
-	counter /= 2;
+	}
+	counter >>= 1;
 }
 
 static void ft_sighandler(int sig)
 {
-	(void)sig;
+	(void) sig;
 	ft_send_char(0, 0);
 }
 
@@ -67,5 +65,4 @@ int	main(int argc, char **argv)
 	{
 		pause();
 	}
-	return (0);
 }
