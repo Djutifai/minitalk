@@ -4,7 +4,7 @@ OBJSERV		=	${SRCSERV:.c=.o}
 
 INCLUDE		=	includes/minitalk.h
 
-SRCCLNT		=	src/client.c src/ft_atoi.c
+SRCCLNT		=	src/client.c src/clfuncs.c
 
 OBJCLNT		=	${SRCCLNT:.c=.o}
 

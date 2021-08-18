@@ -1,43 +1,45 @@
 #include "../includes/minitalk.h"
 
-void	ft_sighandler(int signum)
+void	ft_sighandler(int signum, siginfo_t *siginfo, void *context)
 {
-	static int	num;
 	static int	counter;
-	char		c;
+	static char	c;
 
-	if (!num)
-		num = 0;
+	(void)context;
+	(void)siginfo;
 	if (!counter)
-		counter = 1;
+		counter = 1 << 7;
+	if (!c)
+		c = 0;
 	if (signum == SIGUSR1)
-		num |= 1;
-	if (counter == 7)
+		c |= counter;
+	counter >>= 1;
+	if (counter == 0)
 	{
-		c = num;
 		write(1, &c, 1);
-		num = 0;
-		counter = 1;
-	}
-	else
-	{
-		counter++;
-		num <<= 1;
+		c = 0;
+		counter = 1 << 7;
 	}
 }
 
 int	main(void)
 {
-	pid_t	server_pid;
 	int		sleeptime;
+	struct sigaction act;
 
+	act.sa_sigaction = ft_sighandler;
+	act.sa_flags = SA_SIGINFO;
+	sigemptyset(&act.sa_mask);
+	sigaddset(&act.sa_mask, SIGUSR1);
+	sigaddset(&act.sa_mask, SIGUSR2);
+	if ((sigaction(SIGUSR1, &act, 0)) == -1)
+		write(1, "Error! Check what you are doing\n", 32);
+	if ((sigaction(SIGUSR2, &act, 0)) == -1)
+		write(1, "Error! Check what you are doing\n", 32);
 	sleeptime = 1;
-	server_pid = getpid();
 	write(1, "Server PID is: ", 15);
-	ft_putnbr(server_pid);
+	ft_putnbr(getpid());
 	write(1, "\n", 1);
-	signal(SIGUSR1, ft_sighandler);
-	signal(SIGUSR2, ft_sighandler);
 	while (sleeptime > 0)
 	{
 		sleeptime = sleep(120);

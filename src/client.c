@@ -4,19 +4,21 @@ void	ft_send_char(pid_t server_pid, char c)
 {
 	int	counter;
 
-	counter = 1 << 6;
+	counter = 1 << 7;
 	while (counter)
 	{
 		if (c & counter)
 		{
-			kill(server_pid, SIGUSR1);
+			if (kill(server_pid, SIGUSR1) == -1)
+				write(1, "Error in sending signals!\n", 26);
 		}
 		else
 		{
-			kill(server_pid, SIGUSR2);
+			if (kill(server_pid, SIGUSR2) == -1)
+				write(1, "Error in sending signals!\n", 26);
 		}
 		counter >>= 1;
-		usleep(50);
+		usleep(100);
 	}
 }
 
