@@ -1,4 +1,4 @@
-#include "../includes/minitalk.h"
+#include "../includes/minitalk_bonus.h"
 
 void	ft_sighandler(int signum, siginfo_t *siginfo, void *context)
 {

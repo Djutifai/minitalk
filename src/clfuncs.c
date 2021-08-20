@@ -18,7 +18,7 @@ int	ft_atoi(const char *str)
 	return ((int)res);
 }
 
-char *ft_validatestr(const char *str)
+int	ft_validatestr(const char *str)
 {
 	size_t	i;
 
@@ -26,6 +26,8 @@ char *ft_validatestr(const char *str)
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')
-			return "Error"
+			return (-1);
+		i++;
 	}
+	return (1);
 }
