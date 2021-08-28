@@ -17,3 +17,16 @@ void	ft_putnbr(int n)
 		write(1, &divdigit, 1);
 	}
 }
+
+int		ft_validatestr(const char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (-1);
+	}
+	return (1);
+}

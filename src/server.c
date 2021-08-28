@@ -1,12 +1,10 @@
 #include "../includes/minitalk.h"
 
-void	ft_sighandler(int signum, siginfo_t *siginfo, void *context)
+static void	ft_shift_bit(int signum, pid_t client_pid)
 {
 	static int	counter;
 	static char	c;
 
-	(void)context;
-	(void)siginfo;
 	if (!counter)
 		counter = 1 << 7;
 	if (!c)
@@ -16,10 +14,33 @@ void	ft_sighandler(int signum, siginfo_t *siginfo, void *context)
 	counter >>= 1;
 	if (counter == 0)
 	{
+		if (c == 0)
+			return ;
 		write(1, &c, 1);
 		c = 0;
 		counter = 1 << 7;
 	}
+	if (kill(client_pid, SIGUSR1) == -1)
+		write (1, "Error in sending signals!\n", 26);
+}
+
+static void ft_sighandler(int signum, siginfo_t *siginfo, void *context)
+{
+	static int nullCounter;
+
+	(void)context;
+	if (!nullCounter)
+		nullCounter = 0;
+	if (signum == SIGUSR1)
+		nullCounter = 0;
+	else
+		nullCounter++;
+	if (nullCounter == 8)
+	{
+		write(1, "\nThe \"minitalk\" is done :D", 26);
+		return ;
+	}
+	ft_shift_bit(signum, siginfo->si_pid);
 }
 
 int	main(void)
@@ -40,9 +61,9 @@ int	main(void)
 	write(1, "Server PID is: ", 15);
 	ft_putnbr(getpid());
 	write(1, "\n", 1);
-	while (sleeptime > 0)
-	{
-		sleeptime = sleep(120);
-	}
-	write(1, "\nTime ran out\n", 14);
+	if (sleep(15) == 0)
+		write(1, "\nTime ran out\n", 14);
+	while (sleeptime > 0)	
+		sleeptime = sleep(6);
+	write(1, "\nThanks for using my program!", 30);
 }

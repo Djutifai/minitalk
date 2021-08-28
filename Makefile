@@ -40,8 +40,8 @@ CLNAMEBON	=	client_bonus
 all:		$(NAME)
 
 $(NAME):	${OBJSERV} ${OBJCLNT} Makefile ${INCLUDE}
-			${CC} ${CFLAGS} ${OBJSERV} -o ${SENAME}
 			${CC} ${CFLAGS} ${OBJCLNT} -o ${CLNAME}
+			${CC} ${CFLAGS} ${OBJSERV} -o ${SENAME}
 
 clean:
 			${RM} ${OBJSERV} ${OBJCLNT}
