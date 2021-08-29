@@ -9,5 +9,8 @@ int		ft_validatestr(const char *str);
 int		ft_check_everything(int argc, char *pid); 
 int		ft_atoi(char const *str);
 void	ft_putnbr(int nb);
+void	ft_get_len(int signum, pid_t server_pid, int *len);
+int		ft_strlen(const char *str);
+void	ft_send_len(pid_t server_pid, int len);
 
 #endif

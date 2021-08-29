@@ -1,4 +1,41 @@
 #include "../includes/minitalk.h"
+#include <stdio.h>
+void ft_send_len(pid_t server_pid, int len)
+{
+	static pid_t	myServPid;
+	static int		myLen;
+	static int		counter;
+
+	if (!myServPid)
+	{
+		myServPid = server_pid;
+		myLen = len;
+		printf("len on client side%d\n", len);
+		counter = 1 << 7;
+	}
+	if (counter)
+	{
+		if (myLen & counter)
+		{
+			if (kill(myServPid, SIGUSR1) == -1)
+				write(1, "Error in sending signals!\n", 26);
+		}
+		else
+			if(kill(myServPid, SIGUSR2) == -1)
+				write(1, "Error in sending signals!\n", 26);
+	}
+	counter >>= 1;
+}
+
+int ft_strlen(const char *str)
+{
+	size_t i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
 
 int	ft_validatestr(const char *str)
 {

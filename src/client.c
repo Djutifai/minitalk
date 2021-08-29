@@ -20,7 +20,7 @@ static void ft_eof(pid_t server_pid)
 
 	if (!counter)
 		counter = 0;
-	if (counter == 8)
+	if (counter == 16)
 		return ;
 	if (kill(server_pid, SIGUSR2) == -1)
 		write(1, "Error in sending signals!\n", 26);
@@ -37,6 +37,8 @@ static void	ft_send_str(pid_t server_pid, char *str)
 	{
 		myStr = str;
 		serv_pid = server_pid;
+		counter = 1 << 7;
+		return ;
 	}
 	if (!myStr)
 	{
@@ -50,11 +52,22 @@ static void	ft_send_str(pid_t server_pid, char *str)
 	}
 	ft_send_char(*myStr, counter, serv_pid);
 	counter >>= 1;
-	usleep(20);
+	usleep(15);
 }
 
 static void ft_sighandler(int signum, siginfo_t *siginfo, void *context)
 {
+	static int firstLaunch;
+
+	if (signum == SIGUSR2)
+	{
+		write(1, "Error on server side!\n", 22);
+	}
+	if (!firstLaunch || firstLaunch < 8)
+	{
+		firstLaunch++;
+		ft_send_len(0, 0);
+	}
 	(void)signum;
 	(void)siginfo;
 	(void)context;
@@ -75,10 +88,15 @@ int	main(int argc, char **argv)
 	sigemptyset(&act.sa_mask);
 	sigaddset(&act.sa_mask, SIGUSR1);
 	sigaddset(&act.sa_mask, SIGUSR2);
+	if ((sigaction(SIGUSR1, &act, 0)) == -1)
+		write(1, "Error! Check what you are doing\n", 32);
+	if ((sigaction(SIGUSR2, &act, 0)) == -1)
+		write(1, "Error! Check what you are doing\n", 32);
 	sleeptime = 1;
 	i = 0;	
 	server_pid = (pid_t)ft_atoi(argv[1]);
 	ft_send_str(server_pid, argv[2]);
+	ft_send_len(server_pid, ft_strlen(argv[2]));
 	while (sleeptime > 0)
 		sleeptime = sleep(6);
 	write(1, "\nThanks for using my program!", 30);
