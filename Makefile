@@ -1,10 +1,10 @@
-SRCSERV		=	src/server.c src/servfuncs.c
+SRCSERV		=	src/server.c src/servfuncs.c src/commonfncs.c
 
 OBJSERV		=	${SRCSERV:.c=.o}
 
 INCLUDE		=	includes/minitalk.h
 
-SRCCLNT		=	src/client.c src/clfuncs.c
+SRCCLNT		=	src/client.c src/clfuncs.c src/commonfncs.c
 
 OBJCLNT		=	${SRCCLNT:.c=.o}
 

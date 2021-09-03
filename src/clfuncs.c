@@ -1,43 +1,29 @@
 #include "../includes/minitalk.h"
-#include <stdio.h>
-void ft_send_len(pid_t server_pid, int len)
+
+void	ft_send_len(pid_t server_pid, int len)
 {
-	static pid_t	myServPid;
 	static int		myLen;
 	static int		counter;
+	static pid_t	myPid;
 
-	if (!myServPid)
+	if (!myLen)
 	{
-		myServPid = server_pid;
 		myLen = len;
-		printf("len on client side%d\n", len);
-		counter = 1 << 7;
+		counter = 1 << 30;
+		myPid = server_pid;
 	}
 	if (counter)
 	{
-		if (myLen & counter)
-		{
-			if (kill(myServPid, SIGUSR1) == -1)
-				write(1, "Error in sending signals!\n", 26);
-		}
+		if (counter & myLen)
+			ft_send_signal(myPid, SIGUSR1);
 		else
-			if(kill(myServPid, SIGUSR2) == -1)
-				write(1, "Error in sending signals!\n", 26);
+			ft_send_signal(myPid, SIGUSR2);
+		counter >>= 1;
+		usleep(25);
 	}
-	counter >>= 1;
 }
 
-int ft_strlen(const char *str)
-{
-	size_t i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-int	ft_validatestr(const char *str)
+int	ft_validate_pid(const char *str)
 {
 	size_t	i;
 
@@ -55,12 +41,12 @@ int ft_check_everything(int argc, char *pid)
 {
 	if (argc != 3)
 	{
-		write(1, "Check arguments!\nRight usage ./client pid message\n", 50);
+		ft_write_str("Check arguments!\nRight usage ./client pid message\n");
 		return (-1);
 	}
-	if (ft_validatestr(pid) == -1)
+	if (ft_validate_pid(pid) == -1)
 	{
-		write(1, "Invalid PID\n", 12);
+		ft_write_str("Invalid PID\n");
 		return (-1);
 	}
 	return (1);

@@ -2,17 +2,14 @@
 
 void	ft_get_len(int signum, pid_t client_pid, int *len)
 {
-	static int counter;
+	static int		counter;
 
 	if (!counter)
-		counter = 1 << 7;
-	if (counter)
-		if (signum == SIGUSR1)
-			*len = *len | counter;
+		counter = 1 << 30;
+	if (signum == SIGUSR1)
+		*len = *len | counter;
 	counter >>= 1;
-	if (kill(client_pid, SIGUSR1) == -1)
-		write(1, "Error in sending signals!\n", 26);
-	usleep(20);
+	ft_send_signal(client_pid, SIGUSR1);
 }
 
 void	ft_putnbr(int n)
