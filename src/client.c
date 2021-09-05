@@ -27,7 +27,6 @@ static void	ft_send_str(pid_t server_pid, char *str)
 	counter >>= 1;
 	if (!counter)
 	{
-		write(1, myStr, 1);
 		counter = 1 << 7;
 		myStr++;
 	}
