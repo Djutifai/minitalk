@@ -19,7 +19,7 @@ void	ft_send_len(pid_t server_pid, int len)
 		else
 			ft_send_signal(myPid, SIGUSR2);
 		counter >>= 1;
-		usleep(25);
+		usleep(30);
 	}
 }
 
@@ -37,7 +37,7 @@ int	ft_validate_pid(const char *str)
 	return (1);
 }
 
-int ft_check_everything(int argc, char *pid)
+int	ft_check_everything(int argc, char *pid)
 {
 	if (argc != 3)
 	{

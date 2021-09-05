@@ -1,6 +1,6 @@
 #include "../includes/minitalk.h"
 
-static void ft_send_char(char c, int counter, pid_t serv_pid)
+static void	ft_send_char(char c, int counter, pid_t serv_pid)
 {
 	if (c & counter)
 		ft_send_signal(serv_pid, SIGUSR1);
@@ -8,7 +8,7 @@ static void ft_send_char(char c, int counter, pid_t serv_pid)
 		ft_send_signal(serv_pid, SIGUSR2);
 }
 
-static void ft_send_str(pid_t server_pid, char *str)
+static void	ft_send_str(pid_t server_pid, char *str)
 {
 	static char		*myStr;
 	static pid_t	myPid;
@@ -27,22 +27,23 @@ static void ft_send_str(pid_t server_pid, char *str)
 	counter >>= 1;
 	if (!counter)
 	{
+		write(1, myStr, 1);
 		counter = 1 << 7;
 		myStr++;
 	}
-	usleep(20);
+	usleep(30);
 }
 
-static void ft_sighandler(int signum, siginfo_t *siginfo, void *context)
+static void	ft_sighandler(int signum, siginfo_t *siginfo, void *context)
 {
-	static int isSendingLen;
-	
+	static int	isSendingLen;
+
 	if (signum == SIGUSR2)
 	{
 		ft_write_str("Error on server side!\n");
-		return ;
+		exit(-1);
 	}
-	if (!isSendingLen || isSendingLen < 29)
+	if (!isSendingLen || isSendingLen < 30)
 	{
 		isSendingLen++;
 		ft_send_len(0, 0);
@@ -64,8 +65,6 @@ int	main(int argc, char **argv)
 	act.sa_sigaction = ft_sighandler;
 	act.sa_flags = SA_SIGINFO;
 	sigemptyset(&act.sa_mask);
-	sigaddset(&act.sa_mask, SIGUSR1);
-	sigaddset(&act.sa_mask, SIGUSR2);
 	if ((sigaction(SIGUSR1, &act, 0)) == -1)
 		ft_write_str("Error! Check what you are doing\n");
 	if ((sigaction(SIGUSR2, &act, 0)) == -1)
@@ -75,6 +74,7 @@ int	main(int argc, char **argv)
 	ft_send_str(server_pid, argv[2]);
 	ft_send_len(server_pid, ft_strlen(argv[2]));
 	while (sleeptime > 0)
-		sleeptime = sleep(1);
-	ft_write_str("\nThanks for using my program!\n");
+		sleeptime = sleep(2);
+	ft_write_str("Thanks for using my program!\n");
+	return (0);
 }

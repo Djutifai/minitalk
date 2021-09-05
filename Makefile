@@ -8,13 +8,13 @@ SRCCLNT		=	src/client.c src/clfuncs.c src/commonfncs.c
 
 OBJCLNT		=	${SRCCLNT:.c=.o}
 
-SRCSERVBON	=	src/server_bonus.c src/servfuncs_bonus.c
+SRCSERVBON	=	src/server_bonus.c src/servfuncs_bonus.c src/commonfncs_bonus.c
 
 OBJSERVBON	=	${SRCSERVBON:.c=.o}
 
 INCLUDEBON	=	includes/minitalk_bonus.h
 
-SRCCLNTBON	=	src/client_bonus.c src/clfuncs_bonus.c
+SRCCLNTBON	=	src/client_bonus.c src/clfuncs_bonus.c src/commonfncs_bonus.c
 
 OBJCLNTBON	=	${SRCCLNTBON:.c=.o}
 
@@ -63,4 +63,4 @@ fcleanbonus:cleanbonus
 
 rebonus:	fcleanbonus bonus
 
-.PHONY:		all clean fclean re
+.PHONY:		${NAME} all clean fclean re
