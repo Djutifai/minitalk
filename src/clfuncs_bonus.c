@@ -1,23 +1,23 @@
-#include "../includes/minitalk.h"
+#include "minitalk.h"
 
 void	ft_send_len(pid_t server_pid, int len)
 {
-	static int		myLen;
+	static int		my_len;
 	static int		counter;
-	static pid_t	myPid;
+	static pid_t	my_pid;
 
-	if (!myLen)
+	if (!my_len)
 	{
-		myLen = len;
+		my_len = len;
 		counter = 1 << 30;
-		myPid = server_pid;
+		my_pid = server_pid;
 	}
 	if (counter)
 	{
-		if (counter & myLen)
-			ft_send_signal(myPid, SIGUSR1);
+		if (counter & my_len)
+			ft_send_signal(my_pid, SIGUSR1);
 		else
-			ft_send_signal(myPid, SIGUSR2);
+			ft_send_signal(my_pid, SIGUSR2);
 		counter >>= 1;
 		usleep(30);
 	}
@@ -37,14 +37,19 @@ int	ft_validate_pid(const char *str)
 	return (1);
 }
 
-int	ft_check_everything(int argc, char *pid)
+int	ft_check_everything(int argc, char **argv)
 {
 	if (argc != 3)
 	{
 		ft_write_str("Check arguments!\nRight usage ./client pid message\n");
 		return (-1);
 	}
-	if (ft_validate_pid(pid) == -1)
+	if (ft_strlen(argv[2]) == 0)
+	{
+		ft_write_str("Check your string! :)\n");
+		return (-1);
+	}
+	if (ft_validate_pid(argv[1]) == -1)
 	{
 		ft_write_str("Invalid PID\n");
 		return (-1);

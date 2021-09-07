@@ -1,4 +1,4 @@
-#include "../includes/minitalk.h"
+#include "minitalk.h"
 
 int	ft_strlen(const char *str)
 {

@@ -1,4 +1,4 @@
-#include "../includes/minitalk.h"
+#include "minitalk.h"
 
 static void	ft_send_char(char c, int counter, pid_t serv_pid)
 {
@@ -10,41 +10,41 @@ static void	ft_send_char(char c, int counter, pid_t serv_pid)
 
 static void	ft_send_str(pid_t server_pid, char *str)
 {
-	static char		*myStr;
-	static pid_t	myPid;
+	static char		*my_str;
+	static pid_t	my_pid;
 	static int		counter;
 
-	if (!myPid)
+	if (!my_pid)
 	{
-		myStr = str;
-		myPid = server_pid;
+		my_str = str;
+		my_pid = server_pid;
 		counter = 1 << 7;
 		return ;
 	}
-	if (!*myStr)
+	if (!*my_str)
 		return ;
-	ft_send_char(*myStr, counter, myPid);
+	ft_send_char(*my_str, counter, my_pid);
 	counter >>= 1;
 	if (!counter)
 	{
 		counter = 1 << 7;
-		myStr++;
+		my_str++;
 	}
 	usleep(30);
 }
 
 static void	ft_sighandler(int signum, siginfo_t *siginfo, void *context)
 {
-	static int	isSendingLen;
+	static int	is_sending_len;
 
 	if (signum == SIGUSR2)
 	{
 		ft_write_str("Error on server side!\n");
 		exit(-1);
 	}
-	if (!isSendingLen || isSendingLen < 30)
+	if (!is_sending_len || is_sending_len < 30)
 	{
-		isSendingLen++;
+		is_sending_len++;
 		ft_send_len(0, 0);
 		return ;
 	}
@@ -59,7 +59,7 @@ int	main(int argc, char **argv)
 	struct sigaction	act;
 	int					sleeptime;
 
-	if (ft_check_everything(argc, argv[1]) == -1)
+	if (ft_check_everything(argc, argv) == -1)
 		return (-1);
 	act.sa_sigaction = ft_sighandler;
 	act.sa_flags = SA_SIGINFO;

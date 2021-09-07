@@ -2,7 +2,7 @@ SRCSERV		=	src/server.c src/servfuncs.c src/commonfncs.c
 
 OBJSERV		=	${SRCSERV:.c=.o}
 
-INCLUDE		=	includes/minitalk.h
+INCLUDE		=	includes/
 
 SRCCLNT		=	src/client.c src/clfuncs.c src/commonfncs.c
 
@@ -11,8 +11,6 @@ OBJCLNT		=	${SRCCLNT:.c=.o}
 SRCSERVBON	=	src/server_bonus.c src/servfuncs_bonus.c src/commonfncs_bonus.c
 
 OBJSERVBON	=	${SRCSERVBON:.c=.o}
-
-INCLUDEBON	=	includes/minitalk_bonus.h
 
 SRCCLNTBON	=	src/client_bonus.c src/clfuncs_bonus.c src/commonfncs_bonus.c
 
@@ -26,6 +24,8 @@ RM			=	rm -f
 
 NAME		=	minitalk
 
+NAMEBON		=	minitalk_bonus
+
 SENAME		=	server
 
 CLNAME		=	client
@@ -34,33 +34,44 @@ SENAMEBON	=	server_bonus
 
 CLNAMEBON	=	client_bonus
 
-%o:			%c Makefile ${INCLUDE}
-			${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
+%.o:			%.c ${INCLUDE} Makefile 
+				${CC} ${CFLAGS} -c $< -o $@ -I ${INCLUDE}
 
-all:		$(NAME)
+all:			$(NAME)
 
-$(NAME):	${OBJSERV} ${OBJCLNT} Makefile ${INCLUDE}
-			${CC} ${CFLAGS} ${OBJCLNT} -o ${CLNAME}
-			${CC} ${CFLAGS} ${OBJSERV} -o ${SENAME}
+$(NAME):		Makefile ${INCLUDE} $(CLNAME) $(SENAME)
 
+
+$(CLNAME):		${OBJCLNT}
+				${CC} ${CFLAGS} ${OBJCLNT} -o ${CLNAME}
+
+$(SENAME):		${OBJSERV}
+				${CC} ${CFLAGS} ${OBJSERV} -o ${SENAME}
 clean:
-			${RM} ${OBJSERV} ${OBJCLNT}
+				${RM} ${OBJSERV} ${OBJCLNT}
 
-fclean:		clean
-			${RM} ${SENAME} ${CLNAME}
+fclean:			clean
+				${RM} ${SENAME} ${CLNAME}
 
-re:			fclean all
+re:				fclean all
 
-bonus:		${OBJSERVBON} ${OBJCLNTBON} Makefile ${INCLUDEBON}
-			${CC} ${CFLAGS} ${OBJSERVBON} -o ${SENAMEBON}
-			${CC} ${CFLAGS} ${OBJCLNTBON} -o ${CLNAMEBON}
+
+bonus:			$(NAMEBON)
+
+$(NAMEBON):		Makefile ${INCLUDE} $(CLNAMEBON) $(SENAMEBON) 
+
+$(SENAMEBON):	${OBJSERVBON}
+				${CC} ${CFLAGS} ${OBJSERVBON} -o ${SENAMEBON}
+
+$(CLNAMEBON):	${OBJCLNTBON}
+				${CC} ${CFLAGS} ${OBJCLNTBON} -o ${CLNAMEBON}
 
 cleanbonus:
-			${RM} ${OBJSERVBON} ${OBJCLNTBON}
+				${RM} ${OBJSERVBON} ${OBJCLNTBON}
 
-fcleanbonus:cleanbonus
-			${RM} ${SENAMEBON} ${CLNAMEBON}
+fcleanbonus:	cleanbonus
+				${RM} ${SENAMEBON} ${CLNAMEBON}
 
-rebonus:	fcleanbonus bonus
+rebonus:		fcleanbonus bonus
 
-.PHONY:		${NAME} all clean fclean re
+.PHONY:			${NAME} all clean fclean re bonus cleanbonus fcleanbonus rebonus ${NAMEBON}

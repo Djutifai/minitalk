@@ -1,4 +1,4 @@
-#include "../includes/minitalk.h"
+#include "minitalk.h"
 
 void	ft_get_len(int signum, pid_t client_pid, int *len)
 {
@@ -30,7 +30,7 @@ void	ft_putnbr(int n)
 	}
 }
 
-int	ft_ifNotStr(int *index, char **str, pid_t client_pid, int len)
+int	ft_if_not_str(int *index, char **str, pid_t client_pid, int len)
 {
 	*index = 0;
 	*str = ft_calloc(len, sizeof(**str));

@@ -1,4 +1,4 @@
-#include "../includes/minitalk.h"
+#include "minitalk.h"
 
 static void	ft_shift_bit(int signum, pid_t client_pid, int len)
 {
@@ -8,7 +8,7 @@ static void	ft_shift_bit(int signum, pid_t client_pid, int len)
 
 	if (!str)
 	{
-		if (ft_ifNotStr(&index, &str, client_pid, len) == -1)
+		if (ft_if_not_str(&index, &str, client_pid, len) == -1)
 			return ;
 		counter = 1 << 7;
 	}
@@ -30,20 +30,20 @@ static void	ft_shift_bit(int signum, pid_t client_pid, int len)
 
 static void	ft_sighandler(int signum, siginfo_t *siginfo, void *context)
 {
-	static int		isRecievingLen;
+	static int		is_recieving_len;
 	static int		len;
-	static pid_t	myPid;
+	static pid_t	my_pid;
 
-	if (!myPid || myPid != siginfo->si_pid)
+	if (!my_pid || my_pid != siginfo->si_pid)
 	{
-		myPid = siginfo->si_pid;
+		my_pid = siginfo->si_pid;
 		len = 0;
-		isRecievingLen = 0;
+		is_recieving_len = 0;
 	}
 	(void)context;
-	if (!isRecievingLen || isRecievingLen < 31)
+	if (!is_recieving_len || is_recieving_len < 31)
 	{
-		isRecievingLen++;
+		is_recieving_len++;
 		ft_get_len(signum, siginfo->si_pid, &len);
 		return ;
 	}
