@@ -23,14 +23,14 @@ static void	ft_send_str(pid_t server_pid, char *str)
 	}
 	if (!*my_str)
 		return ;
+	usleep(20);
 	ft_send_char(*my_str, counter, my_pid);
 	counter >>= 1;
 	if (!counter)
 	{
 		counter = 1 << 7;
 		my_str++;
-	}
-	usleep(30);
+	}	
 }
 
 static void	ft_sighandler(int signum, siginfo_t *siginfo, void *context)
@@ -73,7 +73,7 @@ int	main(int argc, char **argv)
 	ft_send_str(server_pid, argv[2]);
 	ft_send_len(server_pid, ft_strlen(argv[2]));
 	while (sleeptime > 0)
-		sleeptime = sleep(2);
+		sleeptime = sleep(1);
 	ft_write_str("Thanks for using my program!\n");
 	return (0);
 }

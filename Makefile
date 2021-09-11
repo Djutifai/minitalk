@@ -74,4 +74,4 @@ fcleanbonus:	cleanbonus
 
 rebonus:		fcleanbonus bonus
 
-.PHONY:			${NAME} all clean fclean re bonus cleanbonus fcleanbonus rebonus ${NAMEBON}
+.PHONY:			${NAME} all clean fclean re ${NAMEBON} bonus cleanbonus fcleanbonus rebonus 

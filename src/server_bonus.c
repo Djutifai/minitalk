@@ -25,6 +25,7 @@ static void	ft_shift_bit(int signum, pid_t client_pid, int len)
 		ft_write_and_free(&str);
 		return ;
 	}
+	usleep(30);
 	ft_send_signal(client_pid, SIGUSR1);
 }
 
@@ -69,6 +70,6 @@ int	main(void)
 	if (sleep(60) == 0)
 		write(1, "\nTime ran out\n", 14);
 	while (sleeptime > 0)
-		sleeptime = sleep(15);
+		sleeptime = sleep(60);
 	write(1, "\nThanks for using my program!\n", 31);
 }
